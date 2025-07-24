@@ -30,11 +30,11 @@
 
 # Target file name (without extension).
 # This is the name of the compiled .hex file.
-TARGET = simpleserial-glitch
+TARGET = simpleserial-glitch-custom
 
 # List C source files here.
 # Header files (.h) are automatically pulled in.
-SRC += simpleserial-glitch.c
+SRC += simpleserial-glitch-custom.c
 # -----------------------------------------------------------------------------
 
 CRYPTO_TARGET=NONE

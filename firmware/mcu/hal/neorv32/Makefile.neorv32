@@ -9,8 +9,8 @@ EXTRAINCDIRS += $(HALPATH)/neorv32
 
 ASRC += crt0.S
 
-MCU_FLAGS = -march=rv32i -mabi=ilp32 
-
+#MCU_FLAGS = -march=rv32i -mabi=ilp32 
+MCU_FLAGS = -march=rv32i_zicsr -mabi=ilp32 
 # If you are missing 'which' (Windows uses 'where') you can change
 # program, or just fix the values for CC. On RISC-V we autodetect as
 # the documentation for neorv32 suggests to download pre-built 32-bit

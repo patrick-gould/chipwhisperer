@@ -30,6 +30,10 @@
 // #pragma GCC push_options
 // #pragma GCC optimize ("O0")
 
+/** Password success/failure values */
+#define PASS_SUCCESS 1
+#define PASS_FAILURE 0
+
 #if SS_VER == SS_VER_2_1
 uint8_t glitch_loop(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t* in)
 #else
@@ -72,26 +76,40 @@ uint8_t glitch_comparison(uint8_t* in, uint8_t len)
     return 0x00;
 }
 
+/// @brief A blank function that may used as a halting symbol; A point in the code to show a fault has occurred.
+uint8_t __attribute__ ((noinline)) super_secret_function()
+{
+    return (uint8_t)PASS_SUCCESS; // Return has no special meaning.
+}
+
 #if SS_VER == SS_VER_2_1
 uint8_t password(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t* pw)
 #else
 uint8_t password(uint8_t* pw, uint8_t len)
 #endif
 {
-    char passwd[] = "touch";
-    char passok = 1;
-    int cnt;
-
+    // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 time each cycle by default.
     trigger_high();
+
+    // Make sure to include overhead of adding variables to keep timing consistant.
+    char passwd[] = "touch";    // Password coming in should be "00000".
+    char passok = PASS_SUCCESS;
+    int cnt;
 
     //Simple test - doesn't check for too-long password!
     for(cnt = 0; cnt < 5; cnt++){
         if (pw[cnt] != passwd[cnt]){
-            passok = 0;
+            passok = PASS_FAILURE; // This should "always" happen.
         }
     }
 
-    trigger_low();
+    // If the above code somehow fails, we should pass this if-condition.
+    if(passok)
+    {
+        passok = super_secret_function(); // We "should" never reach this line; function returns PASS_SUCCESS.
+    }
+
+    trigger_low(); // Disables ADC counter.
 
     simpleserial_put('r', 1, (uint8_t*)&passok);
     return 0x00;

@@ -22,6 +22,7 @@
 #include <newlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include "neorv32_uart.h"
 #include "hal.h"
 #undef errno
 extern int errno;

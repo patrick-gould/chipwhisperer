@@ -17,10 +17,8 @@
     See: <http://www.gnu.org/licenses/>.
 */
 
-// Standard-C Libraries.
 #include <stdint.h>
 #include <stdlib.h>
-// Local
 #include "hal.h"
 #include "simpleserial.h"
 
@@ -39,20 +37,21 @@ uint8_t password(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *pw)
 uint8_t password(uint8_t *pw, uint8_t len) // Alternate header used if using simple_serial.1.x
 #endif
 {
-    // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on the Neorv32.
+    // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on the ICE40 with a Neorv32 flashed.
     trigger_high();
 
     // Make sure to include overhead of adding variables inside trigger to keep timing consistant.
-    char passwd[] = "touch";    // Password coming in should be "00000" by default.
+    char passwd[] = "touch"; // Password coming in should be "00000" by default.
+    char badPasswd[] = "00000";
     char passok = PASS_SUCCESS; // Default value since an option to pass is to skip the for-loop.
     int cnt;                    // Loop counter.
 
     // Simple test - doesn't check for too-long password!
     for (cnt = 0; cnt < 5; cnt++)
     {
-        if (pw[cnt] != passwd[cnt])
+        if (badPasswd[cnt] != passwd[cnt])
         {
-            passok = PASS_FAILURE; // This should "always" happen.
+            passok = PASS_FAILURE;
         }
     }
 
@@ -63,37 +62,29 @@ uint8_t password(uint8_t *pw, uint8_t len) // Alternate header used if using sim
     }
 
     trigger_low(); // Disables ADC counter.
-
     simpleserial_put('r', 1, (uint8_t *)&passok);
-    return 0x00; // simpleserial_put(...) talks to the outside world, so no need ot return passok here.
+    return 0x0; // simpleserial_put(...) talks to the outside world, so no need ot return passok here.
 }
 
 // #pragma GCC pop_options
 
 int main(void)
 {
-    // platform_init(); Neorv32 platform init is empty, no need to call it. 
+    // Neorv32 platform init is empty, no need to call it.
+    // platform_init();
+    // The 3 functions below just call neorv32.h functions.
     init_uart();
     trigger_setup();
-
-    // /* Device reset detected */
-    // putch('r');
-    // putch('R');
-    // putch('E');
-    // putch('S');
-    // putch('E');
-    // putch('T');
-    // putch(' ');
-    // putch(' ');
-    // putch(' ');
-    // putch('\n');
-
     simpleserial_init();
+
+// Set callback function(s).
 #if SS_VER == SS_VER_2_1
     simpleserial_addcmd(0x01, 5, password);
 #else
     simpleserial_addcmd('p', 5, password);
 #endif
+
     while (1)
+        // Looks for input coming in from Chipwhisperer simpleserial, calls callback function on input.
         simpleserial_get();
 }

@@ -139,6 +139,7 @@ CPPDEFS += -DF_CPU=$(F_CPU)UL
 CFLAGS += -g$(DEBUG)
 CFLAGS += $(CDEFS)
 CFLAGS += -O$(OPT)
+CFLAGS += -static
 CFLAGS += -funsigned-char
 CFLAGS += -funsigned-bitfields
 # Note: -fpack-struct is dangerous! This is only included in XMEGA/AVR HAL

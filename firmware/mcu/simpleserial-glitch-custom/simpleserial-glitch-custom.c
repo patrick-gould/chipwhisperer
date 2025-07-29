@@ -60,7 +60,7 @@ uint8_t password(uint8_t *pw, uint8_t len) // Alternate header used if using sim
     {
         passok = super_secret_function(); // We "should" never reach this line; function returns PASS_SUCCESS.
     }
-
+    
     trigger_low(); // Disables ADC counter.
     simpleserial_put('r', 1, (uint8_t *)&passok);
     return 0x0; // simpleserial_put(...) talks to the outside world, so no need ot return passok here.

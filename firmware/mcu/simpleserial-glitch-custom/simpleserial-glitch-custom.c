@@ -40,7 +40,7 @@ uint8_t password(uint8_t *pw, uint8_t len) // Alternate header used if using sim
     // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on the ICE40 with a Neorv32 flashed.
     trigger_high();
 
-    // Make sure to include overhead of adding variables inside trigger to keep timing consistant.
+    // Make sure to include overhead of adding variables inside trigger to keep timing consistent.
     char passwd[] = "touch"; // Password coming in should be "00000" by default.
     char badPasswd[] = "00000";
     char passok = PASS_SUCCESS; // Default value since an option to pass is to skip the for-loop.

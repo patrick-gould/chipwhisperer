@@ -24,8 +24,8 @@
 #include "simpleserial.h"
 #include "aes.h"
 
-#define PASS_SUCCESS 1
-#define PASS_FAILURE 0
+#define PASS_SUCCESS 1 // If a glitch successfully happened.
+#define PASS_FAILURE 0 // Normal or corrupted run.
 
 // Enable ECB, CTR, and CBC modes. Note this can be done before including aes.h or at compile-time.
 // E.g. with GCC by using the -D flag: gcc -c aes.c -DCBC=0 -DCTR=1 -DECB=1
@@ -49,6 +49,8 @@ static uint8_t test_xcrypt_ctr(const char* xcrypt);
 /// @brief A blank function that may used as a halting symbol; A point in the code to show a fault has occurred. E.g., an instruction skip allowed unreachable code—like this function—to be executed.
 uint8_t __attribute__((noinline)) super_secret_function()
 {
+    int retval = 1;
+    simpleserial_put('r', 1, (uint8_t *)&retval);
     return (uint8_t)PASS_SUCCESS; // Return PASS_SUCCESS since we "passed" the password check.
 }
 
@@ -97,12 +99,13 @@ uint8_t password(void) // Alternate header used if using simple_serial.1.x
 {
     // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on the ICE40 with a Neorv32 flashed.
     trigger_high();
-    // data len and data are not used. Keys are hardcoded in IMEM to save DRAM.
 
-    int exit;
+    int val;
+    int retval;
 
     // The sum of the function returns is the number of failed calls.
-    exit != test_encrypt_cbc();
+    // Inputs are not used. Keys are hardcoded in IMEM to save DRAM.
+    val = test_encrypt_cbc();
     // +
     // test_decrypt_cbc() +
 	// test_encrypt_ctr() + 
@@ -110,13 +113,12 @@ uint8_t password(void) // Alternate header used if using simple_serial.1.x
 	// test_decrypt_ecb() + 
     // test_encrypt_ecb();
 
-    // Note: Chipwhisperer reserves returns from 0x01 - 0x0F. So, we must offset.
-    if (exit > 0) exit += 0x0f;
-
     trigger_low(); // Disables ADC counter.
+
+    retval = exit == 1 ? PASS_SUCCESS : PASS_FAILURE;
     simpleserial_put('r', 1, (uint8_t *)&exit); // Communicate result with python.
 
-    return 0x0; // simpleserial_put(...) talks to the outside world. So, we have no need to return anything here.
+    return 0x0; // simpleserial_put(...) talks to the outside world; we have no need to return anything here.
 }
 
 static void test_encrypt_ecb_verbose(void)
@@ -271,12 +273,12 @@ static uint8_t test_encrypt_cbc(void)
 
     //printf("CBC encrypt: ");
 
-    if (0 == memcmp((char*) out, (char*) in, 64)) {
+    if (!(0 == memcmp((char*) out, (char*) in, 64))) {
         //printf("SUCCESS!\n");
-	return(0);
+	return(super_secret_function());
     } else {
         //printf("FAILURE!\n");
-	return(1);
+	return(0);
     }
 }
 
@@ -384,6 +386,6 @@ int main(void)
 #endif
 
     while (1)
-        // Looks for input coming in from Chipwhisperer simpleserial, calls callback function on input.
+        // Looks for input coming in from Chipwhisperer simpleserial and invokes a callback function based on input.
         simpleserial_get();
 }

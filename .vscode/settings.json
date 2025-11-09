@@ -1,6 +1,8 @@
 {
     "restructuredtext.confPath": "${workspaceFolder}\\docs",
     "files.associations": {
-        "usart_driver.h": "c"
+        "*.csproj": "msbuild",
+        "usart_driver.h": "c",
+        "neorv32.h": "c"
     }
 }

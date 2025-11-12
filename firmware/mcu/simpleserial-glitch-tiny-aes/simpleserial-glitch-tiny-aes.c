@@ -26,6 +26,7 @@
 
 #define PASS_SUCCESS 1 // If a glitch successfully happened.
 #define PASS_FAILURE 0 // Normal or corrupted run.
+uint8_t glitch_result = (uint8_t) PASS_FAILURE; // Holds if super_secret_function was ever called. 
 
 // Enable ECB, CTR, and CBC modes. Note this can be done before including aes.h or at compile-time.
 // E.g. with GCC by using the -D flag: gcc -c aes.c -DCBC=0 -DCTR=1 -DECB=1
@@ -35,7 +36,7 @@
 // Note: AESxxx are defined in the aes.h.
 
 static void phex(uint8_t* str);
-static uint8_t test_encrypt_cbc(void);
+static uint8_t test_encrypt_cbc(int);
 static uint8_t test_decrypt_cbc(void);
 static uint8_t test_encrypt_ctr(void);
 static uint8_t test_decrypt_ctr(void);
@@ -46,53 +47,18 @@ static uint8_t test_xcrypt_ctr(const char* xcrypt);
 
 
 
+
 /// @brief A blank function that may used as a halting symbol; A point in the code to show a fault has occurred. E.g., an instruction skip allowed unreachable code—like this function—to be executed.
 uint8_t __attribute__((noinline)) super_secret_function()
 {
-    int retval = 1;
-    simpleserial_put('r', 1, (uint8_t *)&retval);
+    glitch_result = PASS_SUCCESS;
+    //simpleserial_put('r', 1, (uint8_t *)&retval);
     return (uint8_t)PASS_SUCCESS; // Return PASS_SUCCESS since we "passed" the password check.
 }
 
 
 #if SS_VER == SS_VER_2_1
-uint8_t password_old(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *pw)
-#else
-uint8_t password_old(uint8_t *pw, uint8_t len) // Alternate header used if using simple_serial.1.x
-#endif
-{
-    // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on the ICE40 with a Neorv32 flashed.
-    trigger_high();
-
-    // Make sure to include overhead of adding variables inside trigger to keep timing consistent.
-    char passwd[] = "touch"; // Password coming in should be "00000" by default.
-    char badPasswd[] = "00000";
-    char passok = PASS_SUCCESS; // Default value since an option to pass is to skip the for-loop.
-    int cnt;                    // Loop counter.
-
-    // Simple test - doesn't check for too-long password!
-    for (cnt = 0; cnt < 5; cnt++)
-    {
-        if (badPasswd[cnt] != passwd[cnt])
-        {
-            passok = PASS_FAILURE;
-        }
-    }
-
-    // If the above code somehow fails, we should pass this if-condition.
-    if (passok)
-    {
-        passok = super_secret_function(); // We "should" never reach this line; function returns PASS_SUCCESS.
-    }
-    
-    trigger_low(); // Disables ADC counter.
-    simpleserial_put('r', 1, (uint8_t *)&passok);
-    return 0x0; // simpleserial_put(...) talks to the outside world, so no need ot return passok here.
-}
-
-
-#if SS_VER == SS_VER_2_1
-uint8_t password(uint8_t cmd, uint8_t scmd, uint8_t dlen, uint8_t *data)
+uint8_t aes(uint8_t cmd, uint8_t scmd, uint8_t dlen, uint8_t *data)
 #else
 uint8_t password(void) // Alternate header used if using simple_serial.1.x
 #endif
@@ -100,12 +66,10 @@ uint8_t password(void) // Alternate header used if using simple_serial.1.x
     // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on the ICE40 with a Neorv32 flashed.
     trigger_high();
 
-    int val;
-    int retval;
-
     // The sum of the function returns is the number of failed calls.
     // Inputs are not used. Keys are hardcoded in IMEM to save DRAM.
-    val = test_encrypt_cbc();
+
+    test_encrypt_cbc(0);
     // +
     // test_decrypt_cbc() +
 	// test_encrypt_ctr() + 
@@ -114,9 +78,8 @@ uint8_t password(void) // Alternate header used if using simple_serial.1.x
     // test_encrypt_ecb();
 
     trigger_low(); // Disables ADC counter.
-
-    retval = exit == 1 ? PASS_SUCCESS : PASS_FAILURE;
-    simpleserial_put('r', 1, (uint8_t *)&exit); // Communicate result with python.
+    
+    simpleserial_put('r', 1, (uint8_t *)&glitch_result); // Communicate result with python.
 
     return 0x0; // simpleserial_put(...) talks to the outside world; we have no need to return anything here.
 }
@@ -239,7 +202,7 @@ static uint8_t test_decrypt_cbc(void)
     }
 }
 
-static uint8_t test_encrypt_cbc(void)
+static uint8_t test_encrypt_cbc(int zero)
 {
 #if defined(AES256)
     uint8_t key[] = { 0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe, 0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
@@ -271,15 +234,18 @@ static uint8_t test_encrypt_cbc(void)
     AES_init_ctx_iv(&ctx, key, iv);
     AES_CBC_encrypt_buffer(&ctx, in, 64);
 
-    //printf("CBC encrypt: ");
-
-    if (!(0 == memcmp((char*) out, (char*) in, 64))) {
-        //printf("SUCCESS!\n");
-	return(super_secret_function());
+    int ret_val;
+    if ((0 == memcmp((char*) out, (char*) in, 64))) {
+	ret_val = 1;
     } else {
-        //printf("FAILURE!\n");
-	return(0);
+	ret_val = 0;
     }
+
+    if(zero){
+        super_secret_function();
+    }
+
+    return ret_val;
 }
 
 static uint8_t test_encrypt_ctr(void)
@@ -377,15 +343,14 @@ int main(void)
     trigger_setup();
     simpleserial_init();
 
-
 // Set callback function(s).
 #if SS_VER == SS_VER_2_1
-    simpleserial_addcmd(0x01, 5, password);
+    simpleserial_addcmd(0x01, 5, aes);
 #else
-    simpleserial_addcmd('p', 5, password);
+    simpleserial_addcmd('p', 5, aes);
 #endif
 
     while (1)
-        // Looks for input coming in from Chipwhisperer simpleserial and invokes a callback function based on input.
+        // Looks for input coming in from Chipwhisperer simpleserial, calls callback function on input.
         simpleserial_get();
 }

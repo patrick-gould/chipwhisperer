@@ -1,6 +1,6 @@
 
 uint8_t __attribute__((noinline)) super_secret_function(void);
-int testRunner(int zero);
+int main_ecdh();
 
 /* 
 

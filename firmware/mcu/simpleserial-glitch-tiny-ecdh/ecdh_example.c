@@ -150,8 +150,7 @@ void ecdsa_broken()
 
 
 /// @brief This function drives a simple, hardcoded, test case (we don't really care about the results, only the timing)
-/// @param zero Always a zero. This helps us make an impossible if-condition without the compiler removing it.
-int testRunner(int zero)//int argc, char* argv[]) // We don't care about argv; get rid of it.
+int main_ecdh()//int argc, char* argv[]) // We don't care about argv; get rid of it.
 {
   int i;
   int ncycles = 1; // Used to be 
@@ -166,10 +165,6 @@ int testRunner(int zero)//int argc, char* argv[]) // We don't care about argv; g
   {
     ecdh_demo();
     ecdsa_broken();
-  }
-
-  if (zero){
-    super_secret_function(); // Should *never* be called.
   }
 
   return 0;

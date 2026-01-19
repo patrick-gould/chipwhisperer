@@ -6,7 +6,7 @@
 */
 
 
-#include <stdio.h>
+//#include <stdio.h> Removed to reduce code footprint.
 #include <string.h>
 #include <assert.h>
 #include "bn.h"

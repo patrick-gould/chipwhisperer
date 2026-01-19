@@ -60,10 +60,10 @@ uint8_t __attribute__((noinline)) super_secret_function()
 #if SS_VER == SS_VER_2_1
 uint8_t aes(uint8_t cmd, uint8_t scmd, uint8_t dlen, uint8_t *data)
 #else
-uint8_t password(void) // Alternate header used if using simple_serial.1.x
+uint8_t aes(void) // Alternate header used if using simple_serial.1.x
 #endif
 {
-    // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on the ICE40 with a Neorv32 flashed.
+    // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on an ICE40 loaded with a Neorv32 softcore.
     trigger_high();
 
     // The sum of the function returns is the number of failed calls.

@@ -29,7 +29,7 @@
 */
 
 
-#include <stdio.h>
+//#include <stdio.h> Removed to reduce code footprint.
 #include "bn.h"
 
 
@@ -71,7 +71,7 @@ int main_Factorial()
   bignum_from_int(&num, 100);
   factorial(&num, &result);
   bignum_to_string(&result, buf, sizeof(buf));
-  printf("factorial(100) using bignum = %s\n", buf);
+  //printf("factorial(100) using bignum = %s\n", buf);
 
   return 0;
 }

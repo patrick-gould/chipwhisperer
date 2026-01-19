@@ -36,7 +36,7 @@
 */
 
 
-#include <stdio.h>
+//#include <stdio.h> Removed to reduce code footprint.
 #include <string.h> /* for memcpy */
 #include "bn.h"
 
@@ -96,30 +96,30 @@ static void test_rsa_1(void)
   bignum_from_int(&C, 48);
   bignum_from_int(&N, n);
 
-  printf("\n");
+  //printf("\n");
 
-  printf("  Encrypting message m = %d \n", m);
-  printf("  %d ^ %d mod %d = %d ? \n", m, e, n, c);
+  //printf("  Encrypting message m = %d \n", m);
+  //printf("  %d ^ %d mod %d = %d ? \n", m, e, n, c);
   bignum_from_int(&M, m);
   bignum_from_int(&E, e);
   bignum_from_int(&N, n);
   pow_mod_faster(&M, &E, &N, &C);
   c_result = bignum_to_int(&C);
   bignum_to_string(&C, buf, sizeof(buf));
-  printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
-  printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
+  //printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
+  //printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
 
-  printf("\n");
+  //printf("\n");
 
-  printf("  Decrypting message c = %d \n", c);
-  printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
+  //printf("  Decrypting message c = %d \n", c);
+  //printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
   pow_mod_faster(&C, &D, &N, &M);
   m_result = bignum_to_int(&M);
   bignum_to_string(&M, buf, sizeof(buf));
-  printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
-  printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
+  //printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
+  //printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
 
-  printf("\n");
+  //printf("\n");
 }
 
 
@@ -152,30 +152,30 @@ void test_rsa_2(void)
   bignum_from_int(&C, 1892);
   bignum_from_int(&N, n);
 
-  printf("\n");
+  //printf("\n");
 
-  printf("  Encrypting message m = %d \n", m);
-  printf("  %d ^ %d mod %d = %d ? \n", m, e, n, c);
+  //printf("  Encrypting message m = %d \n", m);
+  //printf("  %d ^ %d mod %d = %d ? \n", m, e, n, c);
   bignum_from_int(&M, m);
   bignum_from_int(&E, e);
   bignum_from_int(&N, n);
   pow_mod_faster(&M, &E, &N, &C);
   c_result = bignum_to_int(&C);
   bignum_to_string(&C, buf, sizeof(buf));
-  printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
-  printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
+  //printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
+  //printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
 
-  printf("\n");
+  //printf("\n");
 
-  printf("  Decrypting message c = %d \n", c);
-  printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
+  //printf("  Decrypting message c = %d \n", c);
+  //printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
   pow_mod_faster(&C, &D, &N, &M);
   m_result = bignum_to_int(&M);
   bignum_to_string(&M, buf, sizeof(buf));
-  printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
-  printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
+  //printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
+  //printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
 
-  printf("\n");
+  //printf("\n");
 }
 
 
@@ -205,30 +205,30 @@ void test_rsa_3(void)
   bignum_from_int(&C, c);
   bignum_from_int(&N, n);
 
-  printf("\n");
+  //printf("\n");
 
-  printf("  Encrypting message m = %d \n", m);
-  printf("  %d ^ %d mod %d = %d ? \n", m, e, n, c);
+  //printf("  Encrypting message m = %d \n", m);
+  //printf("  %d ^ %d mod %d = %d ? \n", m, e, n, c);
   bignum_from_int(&M, m);
   bignum_from_int(&E, e);
   bignum_from_int(&N, n);
   pow_mod_faster(&M, &E, &N, &C);
   c_result = bignum_to_int(&C);
   bignum_to_string(&C, buf, sizeof(buf));
-  printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
-  printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
+  //printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
+  //printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
 
-  printf("\n");
+  //printf("\n");
 
-  printf("  Decrypting message c = %d \n", c);
-  printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
+  //printf("  Decrypting message c = %d \n", c);
+  //printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
   pow_mod_faster(&C, &D, &N, &M);
   m_result = bignum_to_int(&M);
   bignum_to_string(&M, buf, sizeof(buf));
-  printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
-  printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
+  //printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
+  //printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
 
-  printf("\n");
+  //printf("\n");
 }
 
 
@@ -265,40 +265,40 @@ static void test_rsa1024(void)
 
   bignum_from_int(&m, x);
   bignum_to_string(&m, buf, sizeof(buf));
-  printf("m = %s \n", buf);
+  //printf("m = %s \n", buf);
 
-//printf("  Copied %d bytes into m\n", i);
+////printf("  Copied %d bytes into m\n", i);
 
-  printf("  Encrypting number x = %d \n", x);
+  //printf("  Encrypting number x = %d \n", x);
   pow_mod_faster(&m, &e, &n, &c);
-  printf("  Done...\n\n");
+  //printf("  Done...\n\n");
 
   bignum_to_string(&c, buf, sizeof(buf));
-  printf("  Decrypting cipher text '");
+  //printf("  Decrypting cipher text '");
   int i = 0;
   while (buf[i] != 0)
   {
-    printf("%c", buf[i]);
+    //printf("%c", buf[i]);
     i += 1;
   }
-  printf("'\n");
+  //printf("'\n");
 
   /* Clear m */
   bignum_init(&m); 
 
   pow_mod_faster(&c, &d, &n, &m);
-  printf("  Done...\n\n");
+  //printf("  Done...\n\n");
 
 
   bignum_to_string(&m, buf, sizeof(buf));
-  printf("m = %s \n", buf);
+  //printf("m = %s \n", buf);
 }
 
 
 int main_rsa()
 {
-  printf("\n");
-  printf("Testing RSA encryption implemented with bignum. \n");
+  //printf("\n");
+  //printf("Testing RSA encryption implemented with bignum. \n");
 
 
 
@@ -308,8 +308,8 @@ int main_rsa()
 
   test_rsa1024();
 
-  printf("\n");
-  printf("\n");
+  //printf("\n");
+  //printf("\n");
 
 
 

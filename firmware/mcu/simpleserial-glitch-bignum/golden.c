@@ -1,4 +1,4 @@
-#include <stdio.h>
+//#include <stdio.h> Removed to reduce code footprint.
 #include "bn.h"
 
 
@@ -194,7 +194,7 @@ int main_golden()
   int npassed = 0;
   int test_passed;
 
-  printf("\nRunning \"golden\" tests (parsed using from_int):\n\n");
+  //printf("\nRunning \"golden\" tests (parsed using from_int):\n\n");
 
   int i;
   for (i = 0; i < ntests; ++i)
@@ -236,15 +236,15 @@ int main_golden()
     /* Print status: */
     if (op == 'p')
     {
-      printf("  %s pow(%u, %u) = %u \n", (test_passed ? "[ OK ]" : "[FAIL]"), ia, ib, ic);
+      //printf("  %s pow(%u, %u) = %u \n", (test_passed ? "[ OK ]" : "[FAIL]"), ia, ib, ic);
     }
     else if ((op == '<') || (op == '>'))
     {
-      printf("  %s %u %c%c %u = %u \n", (test_passed ? "[ OK ]" : "[FAIL]"), ia, op, op, ib, ic);
+      //printf("  %s %u %c%c %u = %u \n", (test_passed ? "[ OK ]" : "[FAIL]"), ia, op, op, ib, ic);
     }
     else
     {
-      printf("  %s %u %c %u = %u \n", (test_passed ? "[ OK ]" : "[FAIL]"), ia, op, ib, ic);
+      //printf("  %s %u %c %u = %u \n", (test_passed ? "[ OK ]" : "[FAIL]"), ia, op, ib, ic);
     }
 
     if (test_passed)
@@ -254,21 +254,21 @@ int main_golden()
     else
     {
       bignum_to_string(&sa, buf, sizeof(buf));
-      printf("    a = %s \n", buf);
+      //printf("    a = %s \n", buf);
       bignum_to_string(&sb, buf, sizeof(buf));
-      printf("    b = %s \n", buf);
+      //printf("    b = %s \n", buf);
       bignum_to_string(&sc, buf, sizeof(buf));
-      printf("    c = %s \n", buf);
+      //printf("    c = %s \n", buf);
       bignum_to_string(&sd, buf, sizeof(buf));
-      printf("    d = %s \n", buf);
-      printf("\n");
+      //printf("    d = %s \n", buf);
+      //printf("\n");
     }
   }
 
-  printf("\n%d/%d tests successful.\n", npassed, ntests);
+  //printf("\n%d/%d tests successful.\n", npassed, ntests);
 
 
-  printf("\n");
+  //printf("\n");
 
   return (ntests - npassed); /* 0 if all tests passed */
 }

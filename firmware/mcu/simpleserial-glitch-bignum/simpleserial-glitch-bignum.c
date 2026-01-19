@@ -22,6 +22,9 @@
 #include <string.h>
 #include "hal.h"
 #include "simpleserial.h"
+#include "bn.h"
+
+void testRunner(uint8_t);
 
 #define PASS_SUCCESS 1 // If a glitch successfully happened.
 #define PASS_FAILURE 0 // Normal or corrupted run.
@@ -41,10 +44,10 @@ uint8_t __attribute__((noinline)) super_secret_function()
 #if SS_VER == SS_VER_2_1
 uint8_t bigNum(uint8_t cmd, uint8_t scmd, uint8_t dlen, uint8_t *data)
 #else
-uint8_t password(void) // Alternate header used if using simple_serial.1.x
+uint8_t bigNum(void) // Alternate header used if using simple_serial.1.x
 #endif
 {
-    // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on the ICE40 with a Neorv32 flashed.
+    // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on an ICE40 loaded with a Neorv32 softcore.
     trigger_high();
 
     testRunner(0);
@@ -55,6 +58,20 @@ uint8_t password(void) // Alternate header used if using simple_serial.1.x
 
     return 0x0; // simpleserial_put(...) talks to the outside world; we have no need to return anything here.
 }
+
+void test_runner(uint8_t zero){
+
+    // Call test code
+    main_Factorial();
+    main_golden();
+    main_rsa();
+
+    // run our glitch check
+    if(zero){
+        super_secret_function();
+    }
+}
+
 
 /// @brief  Waits for signal from Chipwhisperer and invokes callback to test function.
 /// @return none. Program is an infinite loop.

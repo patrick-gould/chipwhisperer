@@ -36,7 +36,7 @@
 */
 
 
-//#include <stdio.h> Removed to reduce code footprint.
+#include <stdio.h>
 #include <string.h> /* for memcpy */
 #include "bn.h"
 
@@ -105,7 +105,7 @@ static void test_rsa_1(void)
   bignum_from_int(&N, n);
   pow_mod_faster(&M, &E, &N, &C);
   c_result = bignum_to_int(&C);
-  bignum_to_string(&C, buf, sizeof(buf));
+  //bignum_to_string(&C, buf, sizeof(buf));
   //printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
   //printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
 
@@ -115,7 +115,7 @@ static void test_rsa_1(void)
   //printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
   pow_mod_faster(&C, &D, &N, &M);
   m_result = bignum_to_int(&M);
-  bignum_to_string(&M, buf, sizeof(buf));
+  //bignum_to_string(&M, buf, sizeof(buf));
   //printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
   //printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
 
@@ -161,7 +161,7 @@ void test_rsa_2(void)
   bignum_from_int(&N, n);
   pow_mod_faster(&M, &E, &N, &C);
   c_result = bignum_to_int(&C);
-  bignum_to_string(&C, buf, sizeof(buf));
+  //bignum_to_string(&C, buf, sizeof(buf));
   //printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
   //printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
 
@@ -171,7 +171,7 @@ void test_rsa_2(void)
   //printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
   pow_mod_faster(&C, &D, &N, &M);
   m_result = bignum_to_int(&M);
-  bignum_to_string(&M, buf, sizeof(buf));
+  //bignum_to_string(&M, buf, sizeof(buf));
   //printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
   //printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
 
@@ -214,7 +214,7 @@ void test_rsa_3(void)
   bignum_from_int(&N, n);
   pow_mod_faster(&M, &E, &N, &C);
   c_result = bignum_to_int(&C);
-  bignum_to_string(&C, buf, sizeof(buf));
+  //bignum_to_string(&C, buf, sizeof(buf));
   //printf("  %d ^ %d mod %d = %d \n", m, e, n, c_result);
   //printf("  %d ^ %d mod %d = %s \n", m, e, n, buf);
 
@@ -224,7 +224,7 @@ void test_rsa_3(void)
   //printf("  %d ^ %d mod %d = %d ? \n", c, d, n, m);
   pow_mod_faster(&C, &D, &N, &M);
   m_result = bignum_to_int(&M);
-  bignum_to_string(&M, buf, sizeof(buf));
+  //bignum_to_string(&M, buf, sizeof(buf));
   //printf("  %d ^ %d mod %d = %s \n", c, d, n, buf);
   //printf("  %d ^ %d mod %d = %d \n", c, d, n, m_result);
 
@@ -264,7 +264,7 @@ static void test_rsa1024(void)
   bignum_init(&c);
 
   bignum_from_int(&m, x);
-  bignum_to_string(&m, buf, sizeof(buf));
+  //bignum_to_string(&m, buf, sizeof(buf));
   //printf("m = %s \n", buf);
 
 ////printf("  Copied %d bytes into m\n", i);
@@ -273,7 +273,7 @@ static void test_rsa1024(void)
   pow_mod_faster(&m, &e, &n, &c);
   //printf("  Done...\n\n");
 
-  bignum_to_string(&c, buf, sizeof(buf));
+  //bignum_to_string(&c, buf, sizeof(buf));
   //printf("  Decrypting cipher text '");
   int i = 0;
   while (buf[i] != 0)
@@ -290,7 +290,7 @@ static void test_rsa1024(void)
   //printf("  Done...\n\n");
 
 
-  bignum_to_string(&m, buf, sizeof(buf));
+  //bignum_to_string(&m, buf, sizeof(buf));
   //printf("m = %s \n", buf);
 }
 

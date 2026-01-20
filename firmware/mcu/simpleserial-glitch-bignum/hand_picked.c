@@ -1,4 +1,4 @@
-//#include <stdio.h> Removed to reduce code footprint.
+#include <stdio.h>
 #include "bn.h"
 
 

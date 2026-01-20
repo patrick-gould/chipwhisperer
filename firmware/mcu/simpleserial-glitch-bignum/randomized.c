@@ -1,4 +1,4 @@
-//#include <stdio.h> Removed to reduce code footprint.
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
@@ -73,7 +73,7 @@ int main_rand(int argc, char** argv)
   if (!cmp_result)
   {
     char buf[8192];
-    bignum_to_string(&res, buf, sizeof(buf));
+    //bignum_to_string(&res, buf, sizeof(buf));
     //printf("\ngot %s\n", buf);
     //printf(" a  = %d \n", bignum_to_int(&a));
     //printf(" b  = %d \n", bignum_to_int(&b));

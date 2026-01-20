@@ -24,6 +24,7 @@
 */
 
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "ecdh.h"
@@ -149,24 +150,10 @@ void ecdsa_broken()
 }
 
 
-/// @brief This function drives a simple, hardcoded, test case (we don't really care about the results, only the timing)
-int main_ecdh()//int argc, char* argv[]) // We don't care about argv; get rid of it.
+
+int main_ecdh()
 {
-  int i;
-  int ncycles = 1; // Used to be 
-
-  // Allows you to repeat test runs.
-  // if (argc > 1)
-  // {
-  //   ncycles = atoi(argv[1]);
-  // }
-
-  for (i = 0; i < ncycles; ++i)
-  {
-    ecdh_demo();
-    ecdsa_broken();
-  }
-
+  ecdh_demo();
   return 0;
 }
 

@@ -1,6 +1,5 @@
+int main_ecdh(void);
 
-uint8_t __attribute__((noinline)) super_secret_function(void);
-int main_ecdh();
 
 /* 
 
@@ -104,7 +103,6 @@ int ecdh_shared_secret(const uint8_t* private_key, const uint8_t* others_pub, ui
 /* Broken :( .... */
 int ecdsa_sign(const uint8_t* private_key, uint8_t* hash, uint8_t* random_k, uint8_t* signature);
 int ecdsa_verify(const uint8_t* public_key, uint8_t* hash, const uint8_t* signature);
-
 
 /******************************************************************************/
 

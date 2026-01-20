@@ -18,7 +18,7 @@ There may well be room for performance-optimizations and improvements.
 
 */
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
 #include "bn.h"
@@ -31,12 +31,6 @@ static void _rshift_one_bit(struct bn* a);
 static void _lshift_word(struct bn* a, int nwords);
 static void _rshift_word(struct bn* a, int nwords);
 
-/// @brief A simple test driver.
-int main(){
-  main_Factorial();
-  main_golden();
-  main_rsa();
-}
 
 /* Public / Exported functions. */
 void bignum_init(struct bn* n)
@@ -119,7 +113,7 @@ void bignum_from_string(struct bn* n, char* str, int nbytes)
   while (i >= 0)
   {
     tmp = 0;
-    sscanf(&str[i], SSCANF_FORMAT_STR, &tmp);
+    //sscanf(&str[i], SSCANF_FORMAT_STR, &tmp);
     n->array[j] = tmp;
     i -= (2 * WORD_SIZE); /* step WORD_SIZE hex-byte(s) back in the string. */
     j += 1;               /* step one element forward in the array. */
@@ -140,7 +134,7 @@ void bignum_to_string(struct bn* n, char* str, int nbytes)
   /* reading last array-element "MSB" first -> big endian */
   while ((j >= 0) && (nbytes > (i + 1)))
   {
-    sprintf(&str[i], SPRINTF_FORMAT_STR, n->array[j]);
+    //sprintf(&str[i], SPRINTF_FORMAT_STR, n->array[j]);
     i += (2 * WORD_SIZE); /* step WORD_SIZE hex-byte(s) forward in the string. */
     j -= 1;               /* step one element back in the array. */
   }

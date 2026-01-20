@@ -59,12 +59,12 @@ uint8_t bigNum(void) // Alternate header used if using simple_serial.1.x
     return 0x0; // simpleserial_put(...) talks to the outside world; we have no need to return anything here.
 }
 
-void test_runner(uint8_t zero){
+void __attribute__((noinline)) test_runner(uint8_t zero){
 
     // Call test code
     main_Factorial();
-    main_golden();
-    main_rsa();
+    // main_golden();
+    // main_rsa();
 
     // run our glitch check
     if(zero){

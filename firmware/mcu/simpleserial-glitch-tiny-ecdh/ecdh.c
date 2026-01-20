@@ -8,7 +8,7 @@
 
 
 
-  Curves available - their different NIST/SECG names and eqivalent symmetric security level:
+  Curves available - their different NIST/SECG names and equivalent symmetric security level:
 
       NIST      SEC Group     strength
     ------------------------------------
@@ -38,7 +38,7 @@
 
 #include <stdint.h>
 #include "ecdh.h"
-//#include <stdio.h> // Removed to save on memory footprint + we are not looking at stdout anyway.
+//#include <stdio.h>
 
 
 /* margin for overhead needed in intermediate calculations */

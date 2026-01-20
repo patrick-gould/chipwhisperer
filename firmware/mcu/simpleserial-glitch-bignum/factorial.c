@@ -29,7 +29,7 @@
 */
 
 
-//#include <stdio.h> Removed to reduce code footprint.
+#include <stdio.h>
 #include "bn.h"
 
 
@@ -66,11 +66,11 @@ int main_Factorial()
 {
   struct bn num;
   struct bn result;
-  char buf[8192];
+  //char buf[8192];
 
-  bignum_from_int(&num, 100);
+  bignum_from_int(&num, 10); // Changed 100 to 10, reduced bn number size to 32 to increase computation speed.
   factorial(&num, &result);
-  bignum_to_string(&result, buf, sizeof(buf));
+  //bignum_to_string(&result, buf, sizeof(buf));
   //printf("factorial(100) using bignum = %s\n", buf);
 
   return 0;

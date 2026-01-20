@@ -34,7 +34,7 @@ TARGET = simpleserial-glitch-tiny-ecdh
 
 # List C source files here.
 # Header files (.h) are automatically pulled in.
-SRC += simpleserial-glitch-tiny-ecdh.c ecdh.c
+SRC += simpleserial-glitch-tiny-ecdh.c ecdh.c ecdh_example.c
 # -----------------------------------------------------------------------------
 
 CRYPTO_TARGET=NONE

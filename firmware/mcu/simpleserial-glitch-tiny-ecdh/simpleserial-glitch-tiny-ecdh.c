@@ -44,9 +44,9 @@ uint8_t __attribute__((noinline)) super_secret_function()
 
 /// @brief A simple test driver: raises trigger, invokes code under test, lowers trigger, tests success.
 #if SS_VER == SS_VER_2_1
-uint8_t ecdh(uint8_t cmd, uint8_t scmd, uint8_t dlen, uint8_t *data)
+uint8_t aes(uint8_t cmd, uint8_t scmd, uint8_t dlen, uint8_t *data)
 #else
-uint8_t ecdh(void) // Alternate header used if using simple_serial.1.x
+uint8_t password(void) // Alternate header used if using simple_serial.1.x
 #endif
 {
     // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on an ICE40 loaded with a Neorv32 softcore.
@@ -61,7 +61,7 @@ uint8_t ecdh(void) // Alternate header used if using simple_serial.1.x
     return 0x0; // simpleserial_put(...) talks to the outside world; we have no need to return anything here.
 }
 
-void test_runner(uint8_t zero){
+void __attribute__((noinline)) testRunner(uint8_t zero){
     main_ecdh();
 
     if(zero){
@@ -82,9 +82,9 @@ int main(void)
 
 // Set callback function(s).
 #if SS_VER == SS_VER_2_1
-    simpleserial_addcmd(0x01, 5, ecdh);
+    simpleserial_addcmd(0x01, 5, aes);
 #else
-    simpleserial_addcmd('p', 5, ecdh);
+    simpleserial_addcmd('p', 5, aes);
 #endif
 
     while (1)

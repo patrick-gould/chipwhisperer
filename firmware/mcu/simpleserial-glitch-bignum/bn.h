@@ -30,7 +30,7 @@ There may well be room for performance-optimizations and improvements.
 #endif
 
 /* Size of big-numbers in bytes */
-#define BN_ARRAY_SIZE    (128 / WORD_SIZE)
+#define BN_ARRAY_SIZE    (32 / WORD_SIZE)
 
 
 /* Here comes the compile-time specialization for how large the underlying array size should be. */
@@ -71,7 +71,6 @@ There may well be room for performance-optimizations and improvements.
 
 /* Custom assert macro - easy to disable */
 #define require(p, msg) assert(p && msg)
-
 
 /* Data-holding structure: array of DTYPEs */
 struct bn
@@ -128,5 +127,3 @@ void bignum_assign(struct bn* dst, struct bn* src);        /* Copy src into dst 
 
 
 #endif /* #ifndef __BIGNUM_H__ */
-
-

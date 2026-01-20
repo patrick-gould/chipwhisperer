@@ -1,4 +1,4 @@
-//#include <stdio.h> Removed to reduce code footprint.
+#include <stdio.h>
 #include "bn.h"
 
 
@@ -181,7 +181,7 @@ static struct test oracle[] =
   {'>',  524288, 19, 1},
   {'>', 1048576, 20, 1},
 };
-const int ntests = sizeof(oracle) / sizeof(*oracle);
+const int ntests2 = sizeof(oracle) / sizeof(*oracle);
 
 
 
@@ -197,7 +197,7 @@ int main_golden()
   //printf("\nRunning \"golden\" tests (parsed using from_int):\n\n");
 
   int i;
-  for (i = 0; i < ntests; ++i)
+  for (i = 0; i < ntests2; ++i)
   {
     /* Copy operator + operands from oracle */
     op = oracle[i].op;
@@ -253,13 +253,13 @@ int main_golden()
     }
     else
     {
-      bignum_to_string(&sa, buf, sizeof(buf));
+      //bignum_to_string(&sa, buf, sizeof(buf));
       //printf("    a = %s \n", buf);
-      bignum_to_string(&sb, buf, sizeof(buf));
+      //bignum_to_string(&sb, buf, sizeof(buf));
       //printf("    b = %s \n", buf);
-      bignum_to_string(&sc, buf, sizeof(buf));
+      //bignum_to_string(&sc, buf, sizeof(buf));
       //printf("    c = %s \n", buf);
-      bignum_to_string(&sd, buf, sizeof(buf));
+      //bignum_to_string(&sd, buf, sizeof(buf));
       //printf("    d = %s \n", buf);
       //printf("\n");
     }
@@ -270,6 +270,6 @@ int main_golden()
 
   //printf("\n");
 
-  return (ntests - npassed); /* 0 if all tests passed */
+  return (ntests2 - npassed); /* 0 if all tests passed */
 }
 

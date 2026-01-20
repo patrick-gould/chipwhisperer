@@ -6,7 +6,7 @@
 */
 
 
-//#include <stdio.h> Removed to reduce code footprint.
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include "bn.h"
@@ -73,15 +73,15 @@ int main_load_cmp()
 
   //printf("Verifying to_string function.\n");
 
-  bignum_to_string(&sa, sabuf, sizeof(sabuf));
-  bignum_to_string(&sb, sbbuf, sizeof(sbbuf));
-  bignum_to_string(&sc, scbuf, sizeof(scbuf));
-  bignum_to_string(&sd, sdbuf, sizeof(sdbuf));
+  //bignum_to_string(&sa, sabuf, sizeof(sabuf));
+  //bignum_to_string(&sb, sbbuf, sizeof(sbbuf));
+  //bignum_to_string(&sc, scbuf, sizeof(scbuf));
+  //bignum_to_string(&sd, sdbuf, sizeof(sdbuf));
 
-  bignum_to_string(&ia, iabuf, sizeof(iabuf));
-  bignum_to_string(&ib, ibbuf, sizeof(ibbuf));
-  bignum_to_string(&ic, icbuf, sizeof(icbuf));
-  bignum_to_string(&id, idbuf, sizeof(idbuf));
+  //bignum_to_string(&ia, iabuf, sizeof(iabuf));
+  //bignum_to_string(&ib, ibbuf, sizeof(ibbuf));
+  //bignum_to_string(&ic, icbuf, sizeof(icbuf));
+  //bignum_to_string(&id, idbuf, sizeof(idbuf));
 
   assert(strcmp(sabuf, iabuf) == 0);
   assert(strcmp(sbbuf, ibbuf) == 0);

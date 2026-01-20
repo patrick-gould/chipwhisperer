@@ -30,11 +30,11 @@
 
 # Target file name (without extension).
 # This is the name of the compiled .hex file.
-TARGET = simpleserial-glitch-bignum
+TARGET = simpleserial-glitch-tiny-bignum
 
 # List C source files here.
 # Header files (.h) are automatically pulled in.
-SRC += simpleserial-glitch-bignum bn.c factorial.c golden.c hand_picked.c load_cmp.c randomized.c rsa.c test_div_algo.c
+SRC += simpleserial-glitch-tiny-bignum.c bn.c factorial.c golden.c hand_picked.c load_cmp.c randomized.c rsa.c test_div_algo.c
 # simpleserial-glitch-bignum and bn.c contain the interesting code, the others are just test cases.
 # -----------------------------------------------------------------------------
 

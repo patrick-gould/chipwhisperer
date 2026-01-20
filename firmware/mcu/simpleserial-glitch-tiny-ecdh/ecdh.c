@@ -45,7 +45,7 @@
 #define BITVEC_MARGIN     3
 #define BITVEC_NBITS      (CURVE_DEGREE + BITVEC_MARGIN)
 #define BITVEC_NWORDS     ((BITVEC_NBITS + 31) / 32)
-#define BITVEC_NBYTES     (sizeof(uint32_t) * BITVEC_NWORDS)
+#define BITVEC_NBYTES     (sizeof(uint64_t ) * BITVEC_NWORDS)
 
 
 /* Disable assertions? */
@@ -77,7 +77,7 @@
 
 
 /* the following type will represent bit vectors of length (CURVE_DEGREE+MARGIN) */
-typedef uint32_t bitvec_t[BITVEC_NWORDS];
+typedef uint64_t  bitvec_t[BITVEC_NWORDS];
 typedef bitvec_t gf2elem_t;           /* this type will represent field elements */
 typedef bitvec_t scalar_t;
  
@@ -206,19 +206,19 @@ const scalar_t  base_order = { 0x2fe84e47, 0x8382e9bb, 0x5174d66e, 0x161de93d, 0
 
 
 /* some basic bit-manipulation routines that act on bit-vectors follow */
-static int bitvec_get_bit(const bitvec_t x, const uint32_t idx)
+static uint64_t  bitvec_get_bit(const bitvec_t x, const uint64_t  idx)
 {
   return ((x[idx / 32U] >> (idx & 31U) & 1U));
 }
 
-static void bitvec_clr_bit(bitvec_t x, const uint32_t idx)
+static void bitvec_clr_bit(bitvec_t x, const uint64_t  idx)
 {
   x[idx / 32U] &= ~(1U << (idx & 31U));
 }
 
 static void bitvec_copy(bitvec_t x, const bitvec_t y)
 {
-  int i;
+  uint64_t  i;
   for (i = 0; i < BITVEC_NWORDS; ++i)
   {
     x[i] = y[i];
@@ -235,9 +235,9 @@ static void bitvec_swap(bitvec_t x, bitvec_t y)
 
 #if defined(CONST_TIME) && (CONST_TIME == 0)
 /* fast version of equality test */
-static int bitvec_equal(const bitvec_t x, const bitvec_t y)
+static uint64_t  bitvec_equal(const bitvec_t x, const bitvec_t y)
 {
-  int i;
+  uint64_t  i;
   for (i = 0; i < BITVEC_NWORDS; ++i)
   {
     if (x[i] != y[i])
@@ -249,10 +249,10 @@ static int bitvec_equal(const bitvec_t x, const bitvec_t y)
 }
 #else
 /* constant time version of equality test */
-static int bitvec_equal(const bitvec_t x, const bitvec_t y)
+static uint64_t  bitvec_equal(const bitvec_t x, const bitvec_t y)
 {
-  int ret = 1;
-  int i;
+  uint64_t  ret = 1;
+  uint64_t  i;
   for (i = 0; i < BITVEC_NWORDS; ++i)
   {
     ret &= (x[i] == y[i]);
@@ -263,7 +263,7 @@ static int bitvec_equal(const bitvec_t x, const bitvec_t y)
 
 static void bitvec_set_zero(bitvec_t x)
 {
-  int i;
+  uint64_t  i;
   for (i = 0; i < BITVEC_NWORDS; ++i)
   {
     x[i] = 0;
@@ -272,9 +272,9 @@ static void bitvec_set_zero(bitvec_t x)
 
 #if defined(CONST_TIME) && (CONST_TIME == 0)
 /* fast implementation */
-static int bitvec_is_zero(const bitvec_t x)
+static uint64_t  bitvec_is_zero(const bitvec_t x)
 {
-  uint32_t i = 0;
+  uint64_t  i = 0;
   while (i < BITVEC_NWORDS)
   {
     if (x[i] != 0)
@@ -287,10 +287,10 @@ static int bitvec_is_zero(const bitvec_t x)
 }
 #else
 /* constant-time implementation */
-static int bitvec_is_zero(const bitvec_t x)
+static uint64_t  bitvec_is_zero(const bitvec_t x)
 {
-  int ret = 1;
-  int i = 0;
+  uint64_t  ret = 1;
+  uint64_t  i = 0;
   for (i = 0; i < BITVEC_NWORDS; ++i)
   {
     ret &= (x[i] == 0);
@@ -300,9 +300,9 @@ static int bitvec_is_zero(const bitvec_t x)
 #endif
 
 /* return the number of the highest one-bit + 1 */
-static int bitvec_degree(const bitvec_t x)
+static uint64_t  bitvec_degree(const bitvec_t x)
 {
-  int i = BITVEC_NWORDS * 32;
+  uint64_t  i = BITVEC_NWORDS * 32;
 
   /* Start at the back of the vector (MSB) */
   x += BITVEC_NWORDS;
@@ -316,7 +316,7 @@ static int bitvec_degree(const bitvec_t x)
   /* Run through rest if count is not multiple of bitsize of DTYPE */
   if (i != 0)
   {
-    uint32_t u32mask = ((uint32_t)1 << 31);
+    uint64_t  u32mask = ((uint64_t )1 << 31);
     while (((*x) & u32mask) == 0)
     {
       u32mask >>= 1;
@@ -327,12 +327,12 @@ static int bitvec_degree(const bitvec_t x)
 }
 
 /* left-shift by 'count' digits */
-static void bitvec_lshift(bitvec_t x, const bitvec_t y, int nbits)
+static void bitvec_lshift(bitvec_t x, const bitvec_t y, uint64_t  nbits)
 {
-  int nwords = (nbits / 32);
+  uint64_t  nwords = (nbits / 32);
 
   /* Shift whole words first if nwords > 0 */
-  int i,j;
+  uint64_t  i,j;
   for (i = 0; i < nwords; ++i)
   {
     /* Zero-initialize from least-significant word until offset reached */
@@ -352,7 +352,7 @@ static void bitvec_lshift(bitvec_t x, const bitvec_t y, int nbits)
   if (nbits != 0)
   {
     /* Left shift rest */
-    int i;
+    uint64_t  i;
     for (i = (BITVEC_NWORDS - 1); i > 0; --i)
     {
       x[i]  = (x[i] << nbits) | (x[i - 1] >> (32 - nbits));
@@ -374,7 +374,7 @@ static void gf2field_set_one(gf2elem_t x)
   /* Set first word to one */
   x[0] = 1;
   /* .. and the rest to zero */
-  int i;
+  uint64_t  i;
   for (i = 1; i < BITVEC_NWORDS; ++i)
   {
     x[i] = 0;
@@ -383,7 +383,7 @@ static void gf2field_set_one(gf2elem_t x)
 
 #if defined(CONST_TIME) && (CONST_TIME == 0)
 /* fastest check if x == 1 */
-static int gf2field_is_one(const gf2elem_t x) 
+static uint64_t  gf2field_is_one(const gf2elem_t x) 
 {
   /* Check if first word == 1 */
   if (x[0] != 1)
@@ -391,7 +391,7 @@ static int gf2field_is_one(const gf2elem_t x)
     return 0;
   }
   /* ...and if rest of words == 0 */
-  int i;
+  uint64_t  i;
   for (i = 1; i < BITVEC_NWORDS; ++i)
   {
     if (x[i] != 0)
@@ -403,16 +403,16 @@ static int gf2field_is_one(const gf2elem_t x)
 }
 #else
 /* constant-time check */
-static int gf2field_is_one(const gf2elem_t x)
+static uint64_t  gf2field_is_one(const gf2elem_t x)
 {
-  int ret = 0;
+  uint64_t  ret = 0;
   /* Check if first word == 1 */
   if (x[0] == 1)
   {
     ret = 1;
   }
   /* ...and if rest of words == 0 */
-  int i;
+  uint64_t  i;
   for (i = 1; i < BITVEC_NWORDS; ++i)
   {
     ret &= (x[i] == 0);
@@ -425,7 +425,7 @@ static int gf2field_is_one(const gf2elem_t x)
 /* galois field(2^m) addition is modulo 2, so XOR is used instead - 'z := a + b' */
 static void gf2field_add(gf2elem_t z, const gf2elem_t x, const gf2elem_t y)
 {
-  int i;
+  uint64_t  i;
   for (i = 0; i < BITVEC_NWORDS; ++i)
   {
     z[i] = (x[i] ^ y[i]);
@@ -442,7 +442,7 @@ static void gf2field_inc(gf2elem_t x)
 /* field multiplication 'z := (x * y)' */
 static void gf2field_mul(gf2elem_t z, const gf2elem_t x, const gf2elem_t y)
 {
-  int i;
+  uint64_t  i;
   gf2elem_t tmp;
 #if defined(CONST_TIME) && (CONST_TIME == 1)
   gf2elem_t blind;
@@ -498,7 +498,7 @@ static void gf2field_mul(gf2elem_t z, const gf2elem_t x, const gf2elem_t y)
 static void gf2field_inv(gf2elem_t z, const gf2elem_t x)
 {
   gf2elem_t u, v, g, h;
-  int i;
+  uint64_t  i;
 
   bitvec_copy(u, x);
   bitvec_copy(v, polynomial);
@@ -553,7 +553,7 @@ static void gf2point_set_zero(gf2elem_t x, gf2elem_t y)
   bitvec_set_zero(y);
 }
 
-static int gf2point_is_zero(const gf2elem_t x, const gf2elem_t y)
+static uint64_t  gf2point_is_zero(const gf2elem_t x, const gf2elem_t y)
 {
   return (    bitvec_is_zero(x)
            && bitvec_is_zero(y));
@@ -640,8 +640,8 @@ static void gf2point_add(gf2elem_t x1, gf2elem_t y1, const gf2elem_t x2, const g
 static void gf2point_mul(gf2elem_t x, gf2elem_t y, const scalar_t exp)
 {
   gf2elem_t tmpx, tmpy;
-  int i;
-  int nbits = bitvec_degree(exp);
+  uint64_t  i;
+  uint64_t  nbits = bitvec_degree(exp);
 
   gf2point_set_zero(tmpx, tmpy);
 
@@ -661,8 +661,8 @@ static void gf2point_mul(gf2elem_t x, gf2elem_t y, const scalar_t exp)
 {
   gf2elem_t tmpx, tmpy;
   gf2elem_t dummyx, dummyy;
-  int i;
-  int nbits = bitvec_degree(exp);
+  uint64_t  i;
+  uint64_t  nbits = bitvec_degree(exp);
 
   gf2point_set_zero(tmpx, tmpy);
   gf2point_set_zero(dummyx, dummyy);
@@ -689,7 +689,7 @@ static void gf2point_mul(gf2elem_t x, gf2elem_t y, const scalar_t exp)
 
 
 /* check if y^2 + x*y = x^3 + a*x^2 + coeff_b holds */
-static int gf2point_on_curve(const gf2elem_t x, const gf2elem_t y)
+static uint64_t  gf2point_on_curve(const gf2elem_t x, const gf2elem_t y)
 {
   gf2elem_t a, b;
 
@@ -725,29 +725,29 @@ static int gf2point_on_curve(const gf2elem_t x, const gf2elem_t y)
 
 
 /* NOTE: private should contain random data a-priori! */
-int ecdh_generate_keys(uint8_t* public_key, uint8_t* private_key)
+uint64_t  ecdh_generate_keys(uint8_t* public_key, uint8_t* private_key)
 {
   /* Get copy of "base" point 'G' */
-  gf2point_copy((uint32_t*)public_key, (uint32_t*)(public_key + BITVEC_NBYTES), base_x, base_y);
+  gf2point_copy((uint64_t *)public_key, (uint64_t *)(public_key + BITVEC_NBYTES), base_x, base_y);
 
   /* Abort key generation if random number is too small */
-  if (bitvec_degree((uint32_t*)private_key) < (CURVE_DEGREE / 2))
+  if (bitvec_degree((uint64_t *)private_key) < (CURVE_DEGREE / 2))
   {
     return 0;
   }
   else
   {
     /* Clear bits > CURVE_DEGREE in highest word to satisfy constraint 1 <= exp < n. */
-    int nbits = bitvec_degree(base_order);
-    int i;
+    uint64_t  nbits = bitvec_degree(base_order);
+    uint64_t  i;
 
     for (i = (nbits - 1); i < (BITVEC_NWORDS * 32); ++i)
     {
-      bitvec_clr_bit((uint32_t*)private_key, i);
+      bitvec_clr_bit((uint64_t *)private_key, i);
     }
 
     /* Multiply base-point with scalar (private-key) */
-    gf2point_mul((uint32_t*)public_key, (uint32_t*)(public_key + BITVEC_NBYTES), (uint32_t*)private_key);
+    gf2point_mul((uint64_t *)public_key, (uint64_t *)(public_key + BITVEC_NBYTES), (uint64_t *)private_key);
 
     return 1;
   }
@@ -755,29 +755,29 @@ int ecdh_generate_keys(uint8_t* public_key, uint8_t* private_key)
 
 
 
-int ecdh_shared_secret(const uint8_t* private_key, const uint8_t* others_pub, uint8_t* output)
+uint64_t  ecdh_shared_secret(const uint8_t* private_key, const uint8_t* others_pub, uint8_t* output)
 {
   /* Do some basic validation of other party's public key */
-  if (    !gf2point_is_zero ((uint32_t*)others_pub, (uint32_t*)(others_pub + BITVEC_NBYTES))
-       &&  gf2point_on_curve((uint32_t*)others_pub, (uint32_t*)(others_pub + BITVEC_NBYTES)) )
+  if (    !gf2point_is_zero ((uint64_t *)others_pub, (uint64_t *)(others_pub + BITVEC_NBYTES))
+       &&  gf2point_on_curve((uint64_t *)others_pub, (uint64_t *)(others_pub + BITVEC_NBYTES)) )
   {
     /* Copy other side's public key to output */
-    unsigned int i;
+    uint64_t  i;
     for (i = 0; i < (BITVEC_NBYTES * 2); ++i)
     {
       output[i] = others_pub[i];
     }
 
     /* Multiply other side's public key with own private key */
-    gf2point_mul((uint32_t*)output,(uint32_t*)(output + BITVEC_NBYTES), (const uint32_t*)private_key);
+    gf2point_mul((uint64_t *)output,(uint64_t *)(output + BITVEC_NBYTES), (const uint64_t *)private_key);
 
     /* Multiply outcome by cofactor if using ECC CDH-variant: */
 #if defined(ECDH_COFACTOR_VARIANT) && (ECDH_COFACTOR_VARIANT == 1)
  #if   (cofactor == 2)
-    gf2point_double((uint32_t*)output, (uint32_t*)(output + BITVEC_NBYTES));
+    gf2point_double((uint64_t *)output, (uint64_t *)(output + BITVEC_NBYTES));
  #elif (cofactor == 4)
-    gf2point_double((uint32_t*)output, (uint32_t*)(output + BITVEC_NBYTES));
-    gf2point_double((uint32_t*)output, (uint32_t*)(output + BITVEC_NBYTES));
+    gf2point_double((uint64_t *)output, (uint64_t *)(output + BITVEC_NBYTES));
+    gf2point_double((uint64_t *)output, (uint64_t *)(output + BITVEC_NBYTES));
  #endif
 #endif
     
@@ -791,7 +791,7 @@ int ecdh_shared_secret(const uint8_t* private_key, const uint8_t* others_pub, ui
 
 
 /* ECDSA is broken :( ... */
-int ecdsa_sign(const uint8_t* private_key, uint8_t* hash, uint8_t* random_k, uint8_t* signature)
+uint64_t  ecdsa_sign(const uint8_t* private_key, uint8_t* hash, uint8_t* random_k, uint8_t* signature)
 {
   /*
      1) calculate e = HASH(m)
@@ -807,27 +807,27 @@ int ecdsa_sign(const uint8_t* private_key, uint8_t* hash, uint8_t* random_k, uin
   assert(random_k != 0);
   assert(signature != 0);
 
-  int success = 0;
+  uint64_t  success = 0;
 
-  if (    (bitvec_degree((uint32_t*)private_key) >= (CURVE_DEGREE / 2))
-       && !bitvec_is_zero((uint32_t*)random_k) )
+  if (    (bitvec_degree((uint64_t *)private_key) >= (CURVE_DEGREE / 2))
+       && !bitvec_is_zero((uint64_t *)random_k) )
   {
     gf2elem_t r, s, z, k;
 
     bitvec_set_zero(r);
     bitvec_set_zero(s);
-    bitvec_copy(z, (uint32_t*)hash);
+    bitvec_copy(z, (uint64_t *)hash);
 
     /* 1 + 2 */
-    int nbits = bitvec_degree(base_order);
-    int i;
+    uint64_t  nbits = bitvec_degree(base_order);
+    uint64_t  i;
     for (i = (nbits - 1); i < BITVEC_NBITS; ++i)
     {
       bitvec_clr_bit(z, i);
     }
 
     /* 3 */
-    bitvec_copy(k, (uint32_t*)random_k);
+    bitvec_copy(k, (uint64_t *)random_k);
 
     /* 4 */
     gf2point_copy(r, s, base_x, base_y);
@@ -838,7 +838,7 @@ int ecdsa_sign(const uint8_t* private_key, uint8_t* hash, uint8_t* random_k, uin
     {
       /* 6) s = inv(k) * (z + (r * d)) mod n ==> if (s == 0) goto 3 **/
       gf2field_inv(s, k);                     /* s = inv(k) */
-      gf2field_mul(r, r, (uint32_t*)private_key); /* r = (r * d) */
+      gf2field_mul(r, r, (uint64_t *)private_key); /* r = (r * d) */
       gf2field_add(r, r, z);                  /* r = z + (r * d) */
 
       nbits = bitvec_degree(r); /* r = r mod n */
@@ -860,8 +860,8 @@ int ecdsa_sign(const uint8_t* private_key, uint8_t* hash, uint8_t* random_k, uin
 
       if (!bitvec_is_zero(s))
       {
-        bitvec_copy((uint32_t*)signature, r);
-        bitvec_copy((uint32_t*)(signature + ECC_PRV_KEY_SIZE), s);
+        bitvec_copy((uint64_t *)signature, r);
+        bitvec_copy((uint64_t *)(signature + ECC_PRV_KEY_SIZE), s);
         success = 1;
       }
     }
@@ -870,7 +870,7 @@ int ecdsa_sign(const uint8_t* private_key, uint8_t* hash, uint8_t* random_k, uin
 }
 
 
-int ecdsa_verify(const uint8_t* public_key, uint8_t* hash, const uint8_t* signature)
+uint64_t  ecdsa_verify(const uint8_t* public_key, uint8_t* hash, const uint8_t* signature)
 {
   /*
     1) Verify that (r,s) are in [1, n-1]
@@ -886,11 +886,11 @@ int ecdsa_verify(const uint8_t* public_key, uint8_t* hash, const uint8_t* signat
   assert(hash != 0);
   assert(signature != 0);
 
-  int success = 0;
+  uint64_t  success = 0;
 
   gf2elem_t r, s;
-  bitvec_copy(r, (uint32_t*)(signature));
-  bitvec_copy(s, (uint32_t*)(signature + ECC_PRV_KEY_SIZE));
+  bitvec_copy(r, (uint64_t *)(signature));
+  bitvec_copy(s, (uint64_t *)(signature + ECC_PRV_KEY_SIZE));
 
   if (    !bitvec_is_zero(s)
        && !bitvec_is_zero(r))
@@ -898,9 +898,9 @@ int ecdsa_verify(const uint8_t* public_key, uint8_t* hash, const uint8_t* signat
     gf2elem_t x1, y1, u1, u2, w, z;
 
     /* 3) z = Ln leftmost bits of e */
-    bitvec_copy(z, (uint32_t*)hash); /* r,s,z are set */
-    uint32_t nbits = bitvec_degree(base_order);
-    uint32_t i;
+    bitvec_copy(z, (uint64_t *)hash); /* r,s,z are set */
+    uint64_t  nbits = bitvec_degree(base_order);
+    uint64_t  i;
     for (i = (nbits - 1); i < BITVEC_NBITS; ++i)
     {
       bitvec_clr_bit(z, i);
@@ -936,8 +936,8 @@ int ecdsa_verify(const uint8_t* public_key, uint8_t* hash, const uint8_t* signat
     bitvec_copy(y1, base_y);
     gf2field_mul(u1, x1, y1);  /* u1 * G */
 
-    bitvec_copy(w, (uint32_t*)(public_key));
-    bitvec_copy(z, (uint32_t*)(public_key + ECC_PRV_KEY_SIZE));
+    bitvec_copy(w, (uint64_t *)(public_key));
+    bitvec_copy(z, (uint64_t *)(public_key + ECC_PRV_KEY_SIZE));
     gf2field_mul(u2, w, z); /* u2 * Q */
 
     

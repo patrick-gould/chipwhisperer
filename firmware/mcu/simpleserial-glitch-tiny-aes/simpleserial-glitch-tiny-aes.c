@@ -66,16 +66,7 @@ uint8_t aes(void) // Alternate header used if using simple_serial.1.x
     // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on an ICE40 loaded with a Neorv32 softcore.
     trigger_high();
 
-    // The sum of the function returns is the number of failed calls.
-    // Inputs are not used. Keys are hardcoded in IMEM to save DRAM.
-
     test_encrypt_cbc(0);
-    // +
-    // test_decrypt_cbc() +
-	// test_encrypt_ctr() + 
-    // test_decrypt_ctr() +
-	// test_decrypt_ecb() + 
-    // test_encrypt_ecb();
 
     trigger_low(); // Disables ADC counter.
     

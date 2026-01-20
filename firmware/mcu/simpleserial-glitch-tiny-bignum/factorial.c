@@ -68,7 +68,7 @@ int main_Factorial()
   struct bn result;
   //char buf[8192];
 
-  bignum_from_int(&num, 10); // Changed 100 to 10, reduced bn number size to 32 to increase computation speed.
+  bignum_from_int(&num, 3); // Changed 100 to 10, reduced bn number size to 32 to increase computation speed.
   factorial(&num, &result);
   //bignum_to_string(&result, buf, sizeof(buf));
   //printf("factorial(100) using bignum = %s\n", buf);

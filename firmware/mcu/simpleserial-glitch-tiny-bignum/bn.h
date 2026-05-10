@@ -84,7 +84,7 @@ struct bn
 enum { SMALLER = -1, EQUAL = 0, LARGER = 1 };
 
 
-/* Test function*/
+/* Test functions */
 int main_Factorial(void);
 int main_golden(void);
 int main_hand_picked(void);

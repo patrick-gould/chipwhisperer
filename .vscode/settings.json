@@ -4,5 +4,8 @@
         "*.csproj": "msbuild",
         "usart_driver.h": "c",
         "neorv32.h": "c"
-    }
+    },
+    "cSpell.words": [
+        "secureboot"
+    ]
 }

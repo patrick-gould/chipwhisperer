@@ -2,7 +2,7 @@
     Author: Patrick T. Gould,
     The Ohio State University - Department of Computer Science and Engineering.
 
-    Calls and tests timing for a small implementation of big number arithmetic. Code under test from https://github.com/kokke/tiny-bignum-c. @
+    Calls and tests timing for a small implementation of big number arithmetic. Code under test from https://github.com/kokke/tiny-bignum-c.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include "bn.h"
 
 void testRunner(uint8_t);
+
 
 #define PASS_SUCCESS 1 // If a glitch successfully happened.
 #define PASS_FAILURE 0 // Normal or corrupted run.

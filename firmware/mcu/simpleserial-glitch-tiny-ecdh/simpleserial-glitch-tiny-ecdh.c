@@ -1,6 +1,5 @@
 /**
-    Author: Patrick T. Gould,
-    The Ohio State University - Department of Computer Science and Engineering.
+    Author: [omitted]
 
     This file, adapted from tiny-ecdh, contains a simple and small version of ecdh.
 

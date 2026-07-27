@@ -1,6 +1,5 @@
 /**
-    Author: Patrick T. Gould,
-    The Ohio State University - Department of Computer Science and Engineering.
+    Author: [omitted]
 
     Calls and tests timing for a small implementation of big number arithmetic. Code under test from https://github.com/kokke/tiny-bignum-c.
 

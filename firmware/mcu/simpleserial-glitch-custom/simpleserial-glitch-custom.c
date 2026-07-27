@@ -1,6 +1,5 @@
 /**
-    Author: Patrick T. Gould,
-    The Ohio State University - Department of Computer Science and Engineering.
+    Author: [omitted]
 
     This file, adapted from Chipwhisperer's + ARMORY's example programs, contains a simple password program that listens for a command to start from Chipwhisperer in an infinite loop.
 

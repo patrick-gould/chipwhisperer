@@ -24,6 +24,8 @@
 #include "simpleserial.h"
 #include "aes.h"
 
+
+
 #define PASS_SUCCESS 1 // If a glitch successfully happened.
 #define PASS_FAILURE 0 // Normal or corrupted run.
 uint8_t glitch_result = (uint8_t) PASS_FAILURE; // Holds if super_secret_function was ever called. 
@@ -35,8 +37,9 @@ uint8_t glitch_result = (uint8_t) PASS_FAILURE; // Holds if super_secret_functio
 #define ECB 1
 // Note: AESxxx are defined in the aes.h.
 
+void testRunner(uint8_t);
 static void phex(uint8_t* str);
-static uint8_t test_encrypt_cbc(int);
+static uint8_t test_encrypt_cbc(void);
 static uint8_t test_decrypt_cbc(void);
 static uint8_t test_encrypt_ctr(void);
 static uint8_t test_decrypt_ctr(void);
@@ -66,13 +69,26 @@ uint8_t aes(void) // Alternate header used if using simple_serial.1.x
     // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on an ICE40 loaded with a Neorv32 softcore.
     trigger_high();
 
-    test_encrypt_cbc(0);
+    testRunner(0);
 
     trigger_low(); // Disables ADC counter.
     
     simpleserial_put('r', 1, (uint8_t *)&glitch_result); // Communicate result with python.
 
     return 0x0; // simpleserial_put(...) talks to the outside world; we have no need to return anything here.
+}
+
+void __attribute__((noinline)) testRunner(uint8_t zero){
+
+    // Call test code
+    test_encrypt_cbc();
+
+    // Run glitch check
+    if(zero){
+        super_secret_function();
+    }
+    
+    // Done!
 }
 
 static void test_encrypt_ecb_verbose(void)
@@ -193,7 +209,7 @@ static uint8_t test_decrypt_cbc(void)
     }
 }
 
-static uint8_t test_encrypt_cbc(int zero)
+static uint8_t test_encrypt_cbc(void)
 {
 #if defined(AES256)
     uint8_t key[] = { 0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe, 0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
@@ -230,10 +246,6 @@ static uint8_t test_encrypt_cbc(int zero)
 	ret_val = 1;
     } else {
 	ret_val = 0;
-    }
-
-    if(zero){
-        super_secret_function();
     }
 
     return ret_val;

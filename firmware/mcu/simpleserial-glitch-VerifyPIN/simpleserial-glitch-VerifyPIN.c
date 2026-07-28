@@ -53,7 +53,7 @@ uint8_t aes(void) // Alternate header used if using simple_serial.1.x
 void __attribute__((noinline)) testRunner(uint8_t zero){
 
     // Call test code
-    verifyPIN_main();
+    glitch_result = verifyPIN_main();
 
 }
 

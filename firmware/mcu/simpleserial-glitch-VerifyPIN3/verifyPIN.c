@@ -41,10 +41,11 @@ BOOL verifyPIN(void);
 
 int verifyPIN_main()
 {
+  int retval;
     initialize();
-    verifyPIN();
+    retval = verifyPIN();
     LAZART_ORACLE(oracle());
 
     //printf("[@] g_countermeasure = %i, g_authenticated = %x, g_ptc = %i\n", g_countermeasure, g_authenticated, g_ptc); // We don't need to print output, cut it.
-    return 0;
+    return retval;
 }

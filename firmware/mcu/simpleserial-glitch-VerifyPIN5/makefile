@@ -34,7 +34,7 @@ TARGET = simpleserial-glitch-VerifyPIN5
 
 # List C source files here.
 # Header files (.h) are automatically pulled in.
-SRC += simpleserial-glitch-VerifyPIN5.c verifyPIN.c initialize.c code.c
+SRC += simpleserial-glitch-VerifyPIN5.c verifyPIN.c initialize.c code.c countermeasure.c
 # -----------------------------------------------------------------------------
 
 CRYPTO_TARGET=NONE

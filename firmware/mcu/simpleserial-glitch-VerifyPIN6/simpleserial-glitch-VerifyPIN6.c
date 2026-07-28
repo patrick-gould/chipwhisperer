@@ -23,7 +23,7 @@
 #include "simpleserial.h"
 
 
-
+#define BOOL_TRUE 0xAA
 #define PASS_SUCCESS 1 // If a glitch successfully happened.
 #define PASS_FAILURE 0 // Normal or corrupted run.
 uint8_t glitch_result = (uint8_t) PASS_FAILURE; // Holds if fault was successful.
@@ -39,12 +39,17 @@ uint8_t aes(void) // Alternate header used if using simple_serial.1.x
 #endif
 {
     // Enables ADC counter. This is how we count clock cycles since the ADC samples 4 times each cycle—by default, anyway. Takes roughly 45 cycles of overhead on an ICE40 loaded with a Neorv32 softcore.
+    glitch_result = PASS_FAILURE;
+
     trigger_high();
 
     testRunner(0);
 
     trigger_low(); // Disables ADC counter.
     
+    // VerifyPin returns BOOL_TRUE (0xAA) on a good glitch.
+    if(glitch_result == BOOL_TRUE) glitch_result = PASS_SUCCESS;
+
     simpleserial_put('r', 1, (uint8_t *)&glitch_result); // Communicate result with python.
 
     return 0x0; // simpleserial_put(...) talks to the outside world; we have no need to return anything here.
@@ -53,8 +58,7 @@ uint8_t aes(void) // Alternate header used if using simple_serial.1.x
 void __attribute__((noinline)) testRunner(uint8_t zero){
 
     // Call test code
-    verifyPIN_main();
-
+    glitch_result = verifyPIN_main();
 }
 
 int main(void)

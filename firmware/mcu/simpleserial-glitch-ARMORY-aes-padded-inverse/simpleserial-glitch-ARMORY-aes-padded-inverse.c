@@ -126,6 +126,11 @@ int __attribute__((noinline)) testRunner(uint8_t zero){
     // The if-block should always run, even under a glitched run.
     if(!zero){
         super_secret_function();
+        asm("NOP");             // Pad attack target
+    asm("NOP");             // Pad attack target
+    asm("NOP");             // Pad attack target
+    asm("NOP");             // Pad attack target
+    asm("NOP");             // Pad attack target
         super_secret_function();
     }
     
